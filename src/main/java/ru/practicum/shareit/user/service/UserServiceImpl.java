@@ -19,51 +19,52 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Collection<UserDto> getAll() {
-        return userRepository.getAll().stream().map(UserMapper::toUserDto).collect(Collectors.toList());
+        return userRepository.findAll().stream().map(UserMapper::toUserDto).collect(Collectors.toList());
     }
 
     @Override
     public UserDto getById(Long id) {
-        User user = userRepository.getById(id);
-        if (user == null) throw new NotFoundException("Пользователь с id " + id + " не найден");
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Пользователь с id " + id + " не найден"));
         return UserMapper.toUserDto(user);
     }
 
     @Override
     public UserDto create(UserDto userDto) {
-        User existingWithEmail = userRepository.getByEmail(userDto.getEmail());
-        if (existingWithEmail != null) {
+        if (userRepository.findByEmail(userDto.getEmail()).isPresent()) {
             throw new ConflictException("Email " + userDto.getEmail() + " уже занят");
         }
 
         User user = UserMapper.toUser(userDto);
-        return UserMapper.toUserDto(userRepository.create(user));
+        user.setId(null);
+        return UserMapper.toUserDto(userRepository.save(user));
     }
 
     @Override
     public UserDto update(Long id, UserDto userDto) {
-        User existing = userRepository.getById(id);
-        if (existing == null) {
-            throw new NotFoundException("Пользователь с id " + id + " не найден");
-        }
+        User existing = userRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Пользователь с id " + id + " не найден"));
 
         if (userDto.getEmail() != null && !userDto.getEmail().isBlank()) {
-            User existingWithEmail = userRepository.getByEmail(userDto.getEmail());
-            if (existingWithEmail != null && !existingWithEmail.getId().equals(id)) {
-                throw new ConflictException("Email " + userDto.getEmail() + " уже занят другим пользователем");
-            }
+            userRepository.findByEmail(userDto.getEmail()).ifPresent(user -> {
+                if (!user.getId().equals(id)) {
+                    throw new ConflictException("Email " + userDto.getEmail() + " уже занят другим пользователем");
+                }
+            });
             existing.setEmail(userDto.getEmail());
         }
         if (userDto.getName() != null && !userDto.getName().isBlank()) {
             existing.setName(userDto.getName());
         }
 
-        return UserMapper.toUserDto(userRepository.update(existing));
+        return UserMapper.toUserDto(userRepository.save(existing));
     }
 
     @Override
     public void delete(Long id) {
-        if (userRepository.getById(id) == null) throw new NotFoundException("Пользователь с id " + id + " не найден");
-        userRepository.delete(id);
+        if (!userRepository.existsById(id)) {
+            throw new NotFoundException("Пользователь с id " + id + " не найден");
+        }
+        userRepository.deleteById(id);
     }
 }
