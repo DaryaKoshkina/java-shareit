@@ -5,6 +5,9 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.practicum.shareit.booking.dto.BookingShortDto;
+
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -22,6 +25,12 @@ public class ItemDto {
     private Boolean available;
 
     private Long requestId;
+
+    private BookingShortDto lastBooking;
+
+    private BookingShortDto nextBooking;
+
+    private List<CommentDto> comments;
 
     public ItemDto(String name, String description, boolean available, Long requestId) {
         this.name = name;

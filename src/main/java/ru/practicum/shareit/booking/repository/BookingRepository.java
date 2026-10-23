@@ -1,0 +1,46 @@
+package ru.practicum.shareit.booking.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+import ru.practicum.shareit.booking.BookingStatus;
+import ru.practicum.shareit.booking.model.Booking;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+@Repository
+public interface BookingRepository extends JpaRepository<Booking, Long> {
+
+    List<Booking> findAllByBookerIdOrderByStartDesc(Long bookerId);
+
+    List<Booking> findAllByBookerIdAndStartBeforeAndEndAfterOrderByStartDesc(Long bookerId,
+                                                                             LocalDateTime start,
+                                                                             LocalDateTime end);
+
+    List<Booking> findAllByBookerIdAndEndBeforeOrderByStartDesc(Long bookerId, LocalDateTime now);
+
+    List<Booking> findAllByBookerIdAndStartAfterOrderByStartDesc(Long bookerId, LocalDateTime now);
+
+    List<Booking> findAllByBookerIdAndStatusOrderByStartDesc(Long bookerId, BookingStatus status);
+
+    List<Booking> findAllByItemOwnerIdOrderByStartDesc(Long ownerId);
+
+    List<Booking> findAllByItemOwnerIdAndStartBeforeAndEndAfterOrderByStartDesc(Long ownerId,
+                                                                                LocalDateTime start,
+                                                                                LocalDateTime end);
+
+    List<Booking> findAllByItemOwnerIdAndEndBeforeOrderByStartDesc(Long ownerId, LocalDateTime now);
+
+    List<Booking> findAllByItemOwnerIdAndStartAfterOrderByStartDesc(Long ownerId, LocalDateTime now);
+
+    List<Booking> findAllByItemOwnerIdAndStatusOrderByStartDesc(Long ownerId, BookingStatus status);
+
+    boolean existsByItemIdAndBookerIdAndStatusAndEndBefore(Long itemId,
+                                                           Long bookerId,
+                                                           BookingStatus status,
+                                                           LocalDateTime now);
+
+    Booking findFirstByItemIdAndStartBeforeOrderByStartDesc(Long itemId, LocalDateTime now);
+
+    Booking findFirstByItemIdAndStartAfterOrderByStartAsc(Long itemId, LocalDateTime now);
+}
