@@ -2,6 +2,7 @@ package ru.practicum.shareit.request;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,8 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.practicum.shareit.client.ItemRequestClient;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
 
-import java.util.List;
-
 @RestController
 @RequestMapping(path = "/requests")
 @RequiredArgsConstructor
@@ -24,26 +23,26 @@ public class ItemRequestController {
     private final ItemRequestClient itemRequestClient;
 
     @PostMapping
-    public ItemRequestDto create(@RequestHeader(USER_ID_HEADER) Long userId,
-                                 @Valid @RequestBody ItemRequestDto itemRequestDto) {
+    public ResponseEntity<Object> create(@RequestHeader(USER_ID_HEADER) Long userId,
+                                         @Valid @RequestBody ItemRequestDto itemRequestDto) {
         return itemRequestClient.create(userId, itemRequestDto);
     }
 
     @GetMapping
-    public List<ItemRequestDto> getOwn(@RequestHeader(USER_ID_HEADER) Long userId) {
+    public ResponseEntity<Object> getOwn(@RequestHeader(USER_ID_HEADER) Long userId) {
         return itemRequestClient.getOwn(userId);
     }
 
     @GetMapping("/all")
-    public List<ItemRequestDto> getAll(@RequestHeader(USER_ID_HEADER) Long userId,
-                                       @RequestParam(defaultValue = "0") int from,
-                                       @RequestParam(defaultValue = "20") int size) {
+    public ResponseEntity<Object> getAll(@RequestHeader(USER_ID_HEADER) Long userId,
+                                         @RequestParam(defaultValue = "0") int from,
+                                         @RequestParam(defaultValue = "20") int size) {
         return itemRequestClient.getAll(userId, from, size);
     }
 
     @GetMapping("/{requestId}")
-    public ItemRequestDto getById(@RequestHeader(USER_ID_HEADER) Long userId,
-                                  @PathVariable Long requestId) {
+    public ResponseEntity<Object> getById(@RequestHeader(USER_ID_HEADER) Long userId,
+                                          @PathVariable Long requestId) {
         return itemRequestClient.getById(userId, requestId);
     }
 }

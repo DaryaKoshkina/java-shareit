@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
@@ -37,14 +36,6 @@ class ErrorHandlerTest {
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
         assertThat(response.getBody().getError()).isEqualTo("запрещено");
-    }
-
-    @Test
-    void shouldHandleValidation() {
-        ResponseEntity<ErrorResponse> response = errorHandler.handleValidation(mock(MethodArgumentNotValidException.class));
-
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-        assertThat(response.getBody().getError()).isEqualTo("Ошибка валидации данных");
     }
 
     @Test

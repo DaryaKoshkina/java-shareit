@@ -5,13 +5,7 @@ import ru.practicum.shareit.item.model.Comment;
 
 public class CommentMapper {
 
-    private CommentMapper() {
-    }
-
     public static CommentDto toCommentDto(Comment comment) {
-        if (comment == null) {
-            return null;
-        }
         return new CommentDto(
                 comment.getId(),
                 comment.getText(),

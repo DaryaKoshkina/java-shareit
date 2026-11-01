@@ -50,7 +50,7 @@ public class ItemServiceImpl implements ItemService {
     public ItemDto getById(Long userId, Long itemId) {
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new NotFoundException("Вещь с id " + itemId + " не найдена"));
-        boolean isOwner = item.getOwner() != null && item.getOwner().getId().equals(userId);
+        boolean isOwner = item.getOwner().getId().equals(userId);
         return enrich(item, isOwner);
     }
 
@@ -74,7 +74,7 @@ public class ItemServiceImpl implements ItemService {
     public ItemDto update(Long userId, Long itemId, ItemDto itemDto) {
         Item existing = itemRepository.findById(itemId)
                 .orElseThrow(() -> new NotFoundException("Вещь с id " + itemId + " не найдена"));
-        if (existing.getOwner() == null || !existing.getOwner().getId().equals(userId)) {
+        if (!existing.getOwner().getId().equals(userId)) {
             throw new NotFoundException("Пользователь с id " + userId + " не является владельцем вещи");
         }
 
@@ -145,7 +145,7 @@ public class ItemServiceImpl implements ItemService {
         }
         return new BookingShortDto(
                 booking.getId(),
-                booking.getBooker() != null ? booking.getBooker().getId() : null,
+                booking.getBooker().getId(),
                 booking.getStart(),
                 booking.getEnd()
         );

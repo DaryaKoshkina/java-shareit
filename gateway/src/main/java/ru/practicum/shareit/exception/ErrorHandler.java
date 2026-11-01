@@ -14,21 +14,6 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 public class ErrorHandler {
 
     @ExceptionHandler
-    public ResponseEntity<ErrorResponse> handleNotFound(final NotFoundException e) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(e.getMessage()));
-    }
-
-    @ExceptionHandler
-    public ResponseEntity<ErrorResponse> handleConflict(final ConflictException e) {
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorResponse(e.getMessage()));
-    }
-
-    @ExceptionHandler
-    public ResponseEntity<ErrorResponse> handleForbidden(final ForbiddenException e) {
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponse(e.getMessage()));
-    }
-
-    @ExceptionHandler
     public ResponseEntity<ErrorResponse> handleBadRequest(final BadRequestException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(e.getMessage()));
     }

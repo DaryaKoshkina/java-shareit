@@ -36,7 +36,7 @@ public class BookingServiceImpl implements BookingService {
         Item item = itemRepository.findById(requestDto.getItemId())
                 .orElseThrow(() -> new NotFoundException("Вещь с id " + requestDto.getItemId() + " не найдена"));
 
-        if (item.getOwner() != null && item.getOwner().getId().equals(userId)) {
+        if (item.getOwner().getId().equals(userId)) {
             throw new ForbiddenException("Владелец не может бронировать собственную вещь");
         }
         if (!item.isAvailable()) {
@@ -64,7 +64,7 @@ public class BookingServiceImpl implements BookingService {
         Booking booking = bookingRepository.findById(bookingId)
                 .orElseThrow(() -> new NotFoundException("Бронирование с id " + bookingId + " не найдено"));
 
-        if (booking.getItem().getOwner() == null || !booking.getItem().getOwner().getId().equals(userId)) {
+        if (!booking.getItem().getOwner().getId().equals(userId)) {
             throw new ForbiddenException("Пользователь с id " + userId + " не является владельцем вещи");
         }
         if (booking.getStatus() != BookingStatus.WAITING) {
@@ -80,9 +80,8 @@ public class BookingServiceImpl implements BookingService {
         Booking booking = bookingRepository.findById(bookingId)
                 .orElseThrow(() -> new NotFoundException("Бронирование с id " + bookingId + " не найдено"));
 
-        boolean isBooker = booking.getBooker() != null && booking.getBooker().getId().equals(userId);
-        boolean isOwner = booking.getItem() != null && booking.getItem().getOwner() != null
-                && booking.getItem().getOwner().getId().equals(userId);
+        boolean isBooker = booking.getBooker().getId().equals(userId);
+        boolean isOwner = booking.getItem().getOwner().getId().equals(userId);
         if (!isBooker && !isOwner) {
             throw new ForbiddenException("Бронирование с id " + bookingId + " недоступно пользователю");
         }

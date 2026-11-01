@@ -23,16 +23,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 class MapperTest {
 
     @Test
-    void shouldReturnNullForNullArguments() {
-        assertThat(UserMapper.toUserDto(null)).isNull();
-        assertThat(UserMapper.toUser(null)).isNull();
-        assertThat(ItemMapper.toItemDto(null)).isNull();
-        assertThat(ItemMapper.toItem(null)).isNull();
-        assertThat(CommentMapper.toCommentDto(null)).isNull();
-        assertThat(BookingMapper.toBookingDto(null)).isNull();
-    }
-
-    @Test
     void shouldMapUserInBothDirections() {
         User user = UserMapper.toUser(dtoWithEmail("ivan@example.com"));
         user.setId(1L);

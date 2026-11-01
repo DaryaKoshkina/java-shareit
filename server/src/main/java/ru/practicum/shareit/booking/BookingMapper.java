@@ -7,13 +7,7 @@ import ru.practicum.shareit.user.UserMapper;
 
 public class BookingMapper {
 
-    private BookingMapper() {
-    }
-
     public static BookingDto toBookingDto(Booking booking) {
-        if (booking == null) {
-            return null;
-        }
         return new BookingDto(
                 booking.getId(),
                 booking.getStart(),
